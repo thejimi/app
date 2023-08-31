@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Filtru</title>
+
+    <meta property="og:title" content="Filtru" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://filtru.xyz/" />
+    <meta property="og:image" content="https://filtru.xyz/icon.jpg" />
+    <meta property="og:description" content="The web is a distracted place, make it focus on you." />
+    <meta name="theme-color" content="#000000">
+
+    <link href='https://fonts.googleapis.com/css?family=Dela Gothic One' rel='stylesheet'>
+
+    <link rel="shortcut icon" href="/cdn/logo_small_square.png" type="image/png">
+
+    <style>
+        [x-cloak] {
+            display: none
+        }
+        .lds-spinner {
+  color: official;
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-spinner div {
+  transform-origin: 40px 40px;
+  animation: lds-spinner 1.2s linear infinite;
+}
+.lds-spinner div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 3px;
+  left: 37px;
+  width: 6px;
+  height: 18px;
+  border-radius: 20%;
+  background: #fff;
+}
+.lds-spinner div:nth-child(1) {
+  transform: rotate(0deg);
+  animation-delay: -1.1s;
+}
+.lds-spinner div:nth-child(2) {
+  transform: rotate(30deg);
+  animation-delay: -1s;
+}
+.lds-spinner div:nth-child(3) {
+  transform: rotate(60deg);
+  animation-delay: -0.9s;
+}
+.lds-spinner div:nth-child(4) {
+  transform: rotate(90deg);
+  animation-delay: -0.8s;
+}
+.lds-spinner div:nth-child(5) {
+  transform: rotate(120deg);
+  animation-delay: -0.7s;
+}
+.lds-spinner div:nth-child(6) {
+  transform: rotate(150deg);
+  animation-delay: -0.6s;
+}
+.lds-spinner div:nth-child(7) {
+  transform: rotate(180deg);
+  animation-delay: -0.5s;
+}
+.lds-spinner div:nth-child(8) {
+  transform: rotate(210deg);
+  animation-delay: -0.4s;
+}
+.lds-spinner div:nth-child(9) {
+  transform: rotate(240deg);
+  animation-delay: -0.3s;
+}
+.lds-spinner div:nth-child(10) {
+  transform: rotate(270deg);
+  animation-delay: -0.2s;
+}
+.lds-spinner div:nth-child(11) {
+  transform: rotate(300deg);
+  animation-delay: -0.1s;
+}
+.lds-spinner div:nth-child(12) {
+  transform: rotate(330deg);
+  animation-delay: 0s;
+}
+@keyframes lds-spinner {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class='bg-black dark' x-data="{ open: true, darkMode: false }" :class="darkMode ? 'dark' : ''" onload="websitescounter()">
+    <div id="all" class="ml-20 mt-20 hidden">
+        <div class="flex flex-between">
+            <img src="/cdn/logo.svg" class="w-auto h-24">
+            <h1 class="text-white text-8xl" style="font-weight: bolder;">Nsfw Sites</h1>
+        </div>
+        <br>
+        <h1 id="websitesblocked" class="text-white text-3xl" style="font-weight: bolder;">Count:</h1>
+        <br>
+        <div style="width:max-content;margin-bottom:20px" class="flex overflow-hidden bg-white border divide-x rounded-lg rtl:flex-row-reverse dark:bg-black dark:border-white dark:divide-white">
+            <button onclick="window.open('https://github.com/thejimi/filtru-default-website-blacklist/edit/main/nsfw-domains.json')" class="px-4 py-2 text-sm font-medium text-white transition-colors duration-200 sm:text-base sm:px-6">
+                Edit
+            </button>
+        
+            <button onclick="window.open('https://raw.githubusercontent.com/thejimi/filtru-default-website-blacklist/main/nsfw-domains.json')" class="px-4 py-2 text-sm font-medium text-white transition-colors duration-200 sm:text-base sm:px-6">
+                View raw
+            </button>
+        
+            <button onclick="window.location.href = ('https://app.filtru.xyz/extension/nsfw')" class="px-4 py-2 text-sm font-medium text-white transition-colors duration-200 sm:text-base sm:px-6">
+                Go back to the app
+            </button>
+
+            <input id="search" type="text" placeholder="Search and click enter" class="px-4 py-2 text-sm font-medium text-white transition-colors duration-200 sm:text-base sm:px-6 bg-black" style="outline:none">
+                
+            </input>
+        </div>
+
+        <div id="list">
+            
+        </div>
+    </div>
+    <div id="loading" class="ml-20 mt-20">
+        <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    </div>
+</body>
+<script>
+    document.addEventListener('keydown', (event)=> {   
+        if(event.key === 'Enter'){
+            var input = document.getElementById("search").value.toLowerCase()
+            if(!input){
+                return
+            }
+            fetch('https://raw.githubusercontent.com/thejimi/filtru-default-website-blacklist/main/nsfw-domains.json') //a list of nsfw websites.
+            .then((response) => response.json())
+            .then((fetchedList) => {
+                if(fetchedList.domains.includes(input)){
+                    alert(`${input} is in the list`)
+                } else {
+                    alert(`Couldn't find ${input} in the list`)
+                }
+            });
+        }
+    });
+
+    function websitescounter(){
+        fetch('https://raw.githubusercontent.com/thejimi/filtru-default-website-blacklist/main/nsfw-domains.json') //a list of nsfw websites.
+        .then((response) => response.json())
+        .then((fetchedList) => {
+            var count = fetchedList.domains.length
+            document.getElementById("websitesblocked").innerHTML = `Count: ${count}`
+
+            fetchedList.domains.forEach(async (item) => {
+                document.getElementById("list").innerHTML += `<div class="dark:bg-gray-900 flex items-center justify-center px-5 py-2 text-lg text-gray-700 transition-colors duration-200 bg-white border rounded-lg dark:text-gray-200 gap-x-2 dark:border-gray-700" style="width:max-content; margin-top:5px;">
+                    ${item}
+                </div>`
+            });
+
+            setTimeout(() => {
+                document.getElementById("loading").style.display = `hidden`
+                document.getElementById("all").style.display = `block`
+            }, 1000);
+        });
+    }
+</script>
+</html>

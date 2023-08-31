@@ -35,8 +35,8 @@
     <script src="//unpkg.com/alpinejs" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body class='dark' x-data="{ open: true, darkMode: false }" :class="darkMode ? 'dark' : ''">
-    <div class="relative min-h-screen" style="background-image: url('/cdn/image.psd.png');">
+<body class='dark' x-data="{ open: true, darkMode: false }" :class="darkMode ? 'dark' : ''" onload="websitescounter()">
+    <div class="relative min-h-screen" style="background-image: url('/cdn/ph_blurred.png');">
         <aside class="flex">
     <div class="flex flex-col items-center w-16 h-screen py-8 bg-white dark:bg-gray-900 dark:border-gray-700">
         <nav class="flex flex-col items-center flex-1 space-y-8">
@@ -93,9 +93,16 @@
             <h1 class="text-white" style="font-size:8vh; margin-top: 0px;">before it destroys <span style="color:#da8c18">you.</span></h1>
         </div>
         
-        <div onclick="disorenBlocker()" id="blockerstatus" class="dark:bg-gray-900 flex items-center justify-center px-5 py-2 text-lg text-gray-700 transition-colors duration-200 bg-white border rounded-lg dark:text-gray-200 gap-x-2 dark:border-gray-700 dark:hover:bg-gray-800" style="width:max-content; margin-top:20px; cursor:pointer">
-            <i class="fa-solid fa-check text-green-300"></i>&nbsp;Nsfw blocker is enabled
+        <div class="flex flex-row">
+            <button onclick="disorenBlocker()" id="blockerstatus" class="dark:bg-gray-800 flex items-center justify-center px-5 py-2 text-lg text-gray-700 transition-colors duration-200 bg-white border rounded-lg dark:text-gray-200 gap-x-2 dark:border-gray-700 dark:hover:bg-gray-800" style="width:max-content; margin-top:20px; cursor:pointer">
+                <i class="fa-solid fa-check text-green-300"></i>&nbsp;Nsfw blocker is enabled
+            </button>
+            &nbsp;
+            <button id="websitesblocked" onclick="window.location.href = ('./websites')" class="dark:bg-gray-900 flex items-center justify-center px-5 py-2 text-lg text-gray-700 transition-colors duration-200 bg-white border rounded-lg dark:text-gray-200 gap-x-2 dark:border-gray-700 dark:hover:bg-gray-800" style="width:max-content; margin-top:20px; cursor:pointer">
+                
+            </button>
         </div>
+        
     </div>
 </aside>
 </body>
@@ -107,6 +114,15 @@
             document.getElementById("blockerstatus").innerHTML = `<i class="fa-solid fa-x text-red-300"></i>&nbsp;Nsfw blocker is disabled`
         }
         
+    }
+
+    function websitescounter(){
+        fetch('https://raw.githubusercontent.com/thejimi/filtru-default-website-blacklist/main/nsfw-domains.json') //a list of nsfw websites.
+            .then((response) => response.json())
+            .then((fetchedList) => {
+                var count = fetchedList.domains.length
+                document.getElementById("websitesblocked").innerHTML = `${count} websites`
+            });
     }
 </script>
 </html>
