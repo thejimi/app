@@ -109,6 +109,15 @@
         <div id="browsernotsupported" class="dark:bg-gray-900 tooltip mt-2 flex hidden items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200 bg-yellow-100 border rounded-lg dark:text-gray-200 gap-x-2 sm:w-auto dark:border-gray-700">
             Your browser "" is not supported yet.
         </div>
+        <div id="extensionbuttonsdiv" class="flex flex-between hidden">
+            <button id="refreshbtn" onclick="window.location.href = ('/settings/index.html?refreshdata=true')" class="hidden dark:bg-gray-900 flex items-center justify-center px-5 py-2 text-lg text-gray-700 transition-colors duration-200 bg-white border rounded-lg dark:text-gray-200 gap-x-2 dark:border-gray-700 dark:hover:bg-gray-800" style="width:max-content; margin-top:20px; cursor:pointer">
+                Refresh
+            </button>
+            &nbsp;
+            <button id="updatebtn" onclick="window.location.href = ('https://filtru.xyz/')" class="hidden dark:bg-gray-900 flex items-center justify-center px-5 py-2 text-lg text-gray-700 transition-colors duration-200 bg-white border rounded-lg dark:text-gray-200 gap-x-2 dark:border-gray-700 dark:hover:bg-gray-800" style="width:max-content; margin-top:20px; cursor:pointer">
+                Update to
+            </button>
+        </div>
         <hr class="my-6 border-gray-200 dark:border-gray-600" />
         <div>
             <label class="block mb-5 text-sm text-gray-600 dark:text-gray-200" style="font-size:3vh">Theme</label>
@@ -127,7 +136,15 @@
 </aside>
 </body>
 <script>
+    
+
+    if(window.location.href.includes('index.html?refreshdata=true')){
+        window.location.href = ('/settings')
+    }
+
     setTimeout(() => {
+        document.getElementById("refreshbtn").style.display = `flex`
+        document.getElementById("extensionbuttonsdiv").style.display = `flex`
         var filtruinstalled = document.querySelector('meta[name="filtruapp_isInstalled"]')
         if(filtruinstalled){
             document.getElementById("extensionstatus").innerHTML = `Filtru has been detected and is installed correctly`
@@ -143,8 +160,25 @@
 
         var filtruversion = document.querySelector('meta[name="filtruapp_version"]')
         if(filtruversion){
-            document.getElementById("extensionversion").innerHTML = `Running version <strong>${filtruversion.content}</strong> which is up to date`
-            document.getElementById("extensionversion").style.display = `flex`
+            fetch('https://app.filtru.xyz/appdata.json') //a list of nsfw websites.
+            .then((response) => response.json())
+            .then((fetched) => {
+                var newestVersion = fetched.latestExtensionVersion
+                if(filtruversion === newestVersion){
+                    document.getElementById("extensionversion").innerHTML = `Running version <strong>${filtruversion.content}</strong> which is up to date`
+                    document.getElementById("extensionversion").style.display = `flex`
+                } else {
+                    document.getElementById("extensionversion").innerHTML = `Running version <strong>${filtruversion.content}</strong> which is not up to date. <i class="fa-solid fa-circle-info"></i> <span class="tooltiptext">The newest version is ${newestVersion}, please update it.</span>`
+                    document.getElementById("extensionversion").style.display = `flex`
+                    document.getElementById("extensionversion").classList.add("bg-red-100")
+                    document.getElementById("extensionversion").classList.add("dark:text-red-300")
+                    document.getElementById("extensionversion").classList.add("dark:border-red-300")
+                    document.getElementById("extensionversion").classList.add("tooltip")
+
+                    document.getElementById("updatebtn").style.display = `flex`
+                    document.getElementById("updatebtn").innerHTML = `Update to ${newestVersion}`
+                }
+            });
         }
     }, 500);
 
